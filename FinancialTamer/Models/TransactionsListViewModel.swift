@@ -10,7 +10,7 @@ final class TransactionsListViewModel: ObservableObject {
         let calendar  = Calendar.current
         
         let startDay = calendar.startOfDay(for: Date())
-        let endDay = calendar.date(byAdding: .day, value: 2, to: startDay) ?? Date()
+        let endDay = calendar.date(byAdding: .day, value: 1, to: startDay) ?? Date()
         
         let dayTransactions = await service.getTransactions(from: startDay, to: endDay)
         let resultTransactions = dayTransactions.filter { $0.category.direction == direction }
