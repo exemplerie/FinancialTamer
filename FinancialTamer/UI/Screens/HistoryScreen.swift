@@ -3,35 +3,53 @@ import SwiftUI
 struct HistoryScreen: View {
     let direction: Direction
     @State private var historyModel: HistoryViewModel
-
+    @Environment(\.dismiss) private var dismiss
+    
     init(direction: Direction) {
         self.direction = direction
         self.historyModel = HistoryViewModel(direction: direction)
     }
 
     var body: some View {
-        VStack(spacing: 15) {
-            Text("Моя история")
-
-            FilterSection
-            OperationsSection
-
-            Spacer()
+        List {
+            Section {
+                FilterSection
+            }
+            Section(header: Text("Операции")) {
+                OperationsSection
+            }
         }
-        .padding(10)
         .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                 } label: {
                     Image(systemName: "doc")
+                        .tint(.element)
+                }
+            }
+        }
+        .navigationTitle("Моя история")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                })
+                {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Назад")
+                    }
+                    .tint(.element)
                 }
             }
         }
     }
+        
 
     private var FilterSection: some View {
-        VStack(spacing: 15) {
+        VStack() {
             DatePicker("Начало", selection: $historyModel.startDate, displayedComponents: .date)
             DatePicker("Конец",   selection: $historyModel.endDate,   displayedComponents: .date)
 
@@ -50,13 +68,10 @@ struct HistoryScreen: View {
                 Text("Сумма")
                 Spacer()
                 Text("\(historyModel.totalAmount)")
-                Text("RUB")
+                Text("₽")
             }
         }
-        .padding(18)
         .background(Color.white)
-        .cornerRadius(15)
-        .padding(.horizontal, 5)
     }
 
     private var OperationsSection: some View {
@@ -69,17 +84,12 @@ struct HistoryScreen: View {
                 .background(Color.white)
                 .cornerRadius(15)
             } else {
-                List {
-                    Section("Операции") {
-                        ForEach(historyModel.visibleTransactions, id: \.id) { transaction in
-                            TransactionCellView(transaction: transaction)
+                ForEach(historyModel.visibleTransactions, id: \.id) { transaction in
+                    TransactionCellView(transaction: transaction)
                                 .listRowSeparator(.hidden)
                         }
-                    }
-                }
+                    
                 .listStyle(.plain)
-                .cornerRadius(15)
-                .padding(.horizontal, 5)
             }
         }
     }

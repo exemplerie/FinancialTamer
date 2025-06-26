@@ -2,7 +2,6 @@ import SwiftUI
 import Foundation
 
 enum SortOption: String, CaseIterable, Identifiable {
-    case none   = "Без сортировки"
     case byDate = "По дате"
     case byAmount = "По сумме"
     
@@ -12,10 +11,20 @@ enum SortOption: String, CaseIterable, Identifiable {
 @Observable
 final class HistoryViewModel {
     var startDate: Date {
-        didSet { adjustDatesAndReload() }
+        didSet {
+            if startDate > endDate {
+                endDate = startDate
+            }
+            reloadTransactions()
+        }
     }
     var endDate: Date {
-        didSet { adjustDatesAndReload() }
+        didSet {
+            if endDate < startDate {
+                startDate = endDate
+            }
+            reloadTransactions()
+        }
     }
     var selectedSort: SortOption {
         didSet { applySort() }
@@ -38,7 +47,7 @@ final class HistoryViewModel {
         let (defaultStart, defaultEnd) = Self.makeDefaultDateWindow()
         self.startDate = defaultStart
         self.endDate = defaultEnd
-        self.selectedSort = .none
+        self.selectedSort = .byDate
         
         Task { await loadTransactions() }
     }
@@ -50,8 +59,7 @@ final class HistoryViewModel {
         applySort()
     }
     
-    private func adjustDatesAndReload() {
-        if startDate > endDate { endDate = startDate }
+    private func reloadTransactions() {
         Task { await loadTransactions() }
     }
     
@@ -61,8 +69,6 @@ final class HistoryViewModel {
     
     private func applySort() {
         switch selectedSort {
-        case .none:
-            visibleTransactions = allTransactions
         case .byDate:
             visibleTransactions = allTransactions.sorted { $0.transactionDate < $1.transactionDate }
         case .byAmount:

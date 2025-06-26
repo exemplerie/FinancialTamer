@@ -2,10 +2,12 @@ import SwiftUI
 
 struct TransactionsListView: View {
     let direction: Direction
+    let title: String
     @State var transactionModel = TransactionsListViewModel()
     
-    init(direction: Direction) {
+    init(direction: Direction, title: String) {
         self.direction = direction
+        self.title = title
     }
     
     var body: some View {
@@ -17,7 +19,7 @@ struct TransactionsListView: View {
                         Spacer()
                         Text(
                             "\(transactionModel.transactionsSum)")
-                        Text("RUB")
+                        Text("₽")
                     }
                 }
                 Section(header: Text("Операции")) {
@@ -30,7 +32,17 @@ struct TransactionsListView: View {
                     }
                 }
             }
-            
+            .navigationTitle(title)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        HistoryScreen(direction: .outcome)
+                    } label: {
+                        Image(systemName: "clock")
+                            .tint(.element)
+                    }
+                }
+            }
         }
         .task {
             await transactionModel.loadTransactions(direction)
@@ -39,5 +51,5 @@ struct TransactionsListView: View {
 }
 
 #Preview {
-    TransactionsListView(direction: .outcome)
+    TransactionsListView(direction: .outcome, title: "Доходы сегодня")
 }

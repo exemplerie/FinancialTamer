@@ -18,7 +18,7 @@ struct TransactionCellView : View {
     }
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 15) {
             if isOutcome {
                 emojiBubble
             }
@@ -30,7 +30,7 @@ struct TransactionCellView : View {
                         .font(.caption2)
                         .foregroundColor(.gray)
                     }
-            }
+            }.frame(maxHeight: .infinity)
                 
             Spacer()
                 
@@ -43,7 +43,11 @@ struct TransactionCellView : View {
                     .foregroundColor(.gray)
                 }
             }
-            .padding(.vertical, 2)
+            .padding(.vertical, 1)
             .background(Color(.systemBackground))
         }
+}
+
+#Preview {
+    TransactionsListView(direction: .outcome, title: "Доходы сегодня")
 }

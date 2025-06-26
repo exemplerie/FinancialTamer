@@ -28,8 +28,8 @@
             filePath = "FinancialTamer/UI/Views/TransactionsListView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5"
-            endingLineNumber = "5"
+            startingLineNumber = "6"
+            endingLineNumber = "6"
             landmarkName = "TransactionsListView"
             landmarkType = "14">
          </BreakpointContent>
@@ -44,8 +44,8 @@
             filePath = "FinancialTamer/UI/Views/TransactionsListView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
