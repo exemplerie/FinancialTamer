@@ -30,6 +30,7 @@ struct HistoryScreen: View {
             }
         }
         .navigationTitle("Моя история")
+        .safeAreaPadding(.top, 10)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
