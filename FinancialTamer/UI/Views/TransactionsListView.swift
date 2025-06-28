@@ -33,6 +33,7 @@ struct TransactionsListView: View {
                 }
             }
             .navigationTitle(title)
+            .safeAreaPadding(.top, 10)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {

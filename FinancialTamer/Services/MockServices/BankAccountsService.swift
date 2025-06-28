@@ -6,7 +6,7 @@ final class BankAccountsService {
         userId: 1,
         name: "Банковский счёт",
         balance: 10000.0,
-        currency: "RUB",
+        currency: "₽",
         createdAt: Date(),
         updatedAt: Date()
     )
