@@ -25,7 +25,7 @@ struct ArticlesScreen: View {
                     print("Error in categories loading: \(error)")
                 }
             }
-            .offset(y: -15)
+            
         }
         .tint(.element)
     }
