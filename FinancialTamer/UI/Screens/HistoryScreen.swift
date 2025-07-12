@@ -2,12 +2,12 @@ import SwiftUI
 
 struct HistoryScreen: View {
     let direction: Direction
-    @State private var historyModel: HistoryViewModel
+    @State private var historyModel: TransactionsHistoryViewModel
     @Environment(\.dismiss) private var dismiss
     
     init(direction: Direction) {
         self.direction = direction
-        self.historyModel = HistoryViewModel(direction: direction)
+        self.historyModel = TransactionsHistoryViewModel(direction: direction)
     }
 
     var body: some View {
@@ -22,7 +22,8 @@ struct HistoryScreen: View {
         .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
+                NavigationLink {
+                    AnalysisScreen()
                 } label: {
                     Image(systemName: "doc")
                         .tint(.element)

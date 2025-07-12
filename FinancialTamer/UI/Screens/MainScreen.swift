@@ -33,6 +33,10 @@ enum TabMain: String, CaseIterable, Identifiable {
 struct MainScreen: View {
     @State var selectedTab: TabMain = .expenses
     
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor.white
+    }
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             ForEach(TabMain.allCases) { tab in
