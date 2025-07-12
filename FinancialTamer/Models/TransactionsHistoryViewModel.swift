@@ -9,13 +9,14 @@ enum SortOption: String, CaseIterable, Identifiable {
 }
 
 @Observable
-final class HistoryViewModel {
+final class TransactionsHistoryViewModel {
     var startDate: Date {
         didSet {
             if startDate > endDate {
                 endDate = startDate
             }
             reloadTransactions()
+            onTransactionsUpdated?()
         }
     }
     var endDate: Date {
@@ -24,11 +25,14 @@ final class HistoryViewModel {
                 startDate = endDate
             }
             reloadTransactions()
+            onTransactionsUpdated?()
         }
     }
     var selectedSort: SortOption {
         didSet { applySort() }
     }
+    
+    var onTransactionsUpdated: (() -> Void)?
     
     private(set) var allTransactions: [Transaction] = []
     var visibleTransactions: [Transaction] = [] {
@@ -57,6 +61,7 @@ final class HistoryViewModel {
         allTransactions = fetched.filter { $0.category.direction == direction }
         visibleTransactions = allTransactions
         applySort()
+        self.onTransactionsUpdated?()
     }
     
     private func reloadTransactions() {
@@ -74,6 +79,7 @@ final class HistoryViewModel {
         case .byAmount:
             visibleTransactions = allTransactions.sorted { $0.amount < $1.amount }
         }
+        onTransactionsUpdated?()
     }
     
     private static func makeDefaultDateWindow() -> (Date, Date) {
