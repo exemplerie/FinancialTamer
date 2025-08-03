@@ -57,8 +57,9 @@ final class TransactionsHistoryViewModel {
     }
     
     private func loadTransactions() async {
-        let fetched = await service.getTransactions(from: startDate, to: endDate)
-        allTransactions = fetched.filter { $0.category.direction == direction }
+        let fetched = try? await service.getTransactions(from: startDate, to: endDate)
+        allTransactions = fetched?.compactMap { Transaction(response: $0) }
+            .filter { $0.category.direction == direction } ?? []
         visibleTransactions = allTransactions
         applySort()
         self.onTransactionsUpdated?()

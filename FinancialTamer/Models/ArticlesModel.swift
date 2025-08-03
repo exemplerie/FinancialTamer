@@ -26,7 +26,7 @@ final class ArticlesModel {
     var searchedText = ""
     
     func loadCategories() async throws {
-        allCategories = try await service.getCategories()
+        allCategories = try await service.getCategories().compactMap { Category(response: $0) }
     }
     
     private func fuzzyMatchScore(_ a: String, _ b: String) -> Double {
