@@ -14,7 +14,8 @@ final class AccountModel {
     }
     
     func loadAccount() async throws {
-        self.account = try await service.getAccount()
+        let bankAccountResponse = try await service.getAccount()
+        self.account = BankAccount(response: bankAccountResponse)
     }
     
     func getBalance() async -> Decimal {
@@ -38,12 +39,19 @@ final class AccountModel {
     }
     
     func saveChanges(newCurrency: String, newBalance: Decimal) async {
-        guard await newCurrency != self.getCurrency() else { return }
-        self.account?.currency = newCurrency
+        let currencyChanged = await newCurrency != self.getCurrency()
+        let balanceChanged = await newBalance != self.getBalance()
         
-        guard await newBalance != self.getBalance() else { return }
-        self.account?.balance = newBalance
+        guard currencyChanged || balanceChanged else { return }
         
-        try? await service.updateAccount(self.account!)
+        if currencyChanged {
+            self.account?.currency = newCurrency
+        }
+        
+        if balanceChanged {
+            self.account?.balance = newBalance
+        }
+        
+        try? await service.updateAccount(account: self.account!)
     }
 }

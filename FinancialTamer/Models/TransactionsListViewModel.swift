@@ -12,12 +12,14 @@ final class TransactionsListViewModel: ObservableObject {
         let startDay = calendar.startOfDay(for: Date())
         let endDay = calendar.date(byAdding: .day, value: 1, to: startDay) ?? Date()
         
-        let dayTransactions = await service.getTransactions(from: startDay, to: endDay)
-        let resultTransactions = dayTransactions.filter { $0.category.direction == direction }
+        let dayTransactions = try? await service.getTransactions(from: startDay, to: endDay)
+        
+        let resultTransactions = dayTransactions?.compactMap { Transaction(response: $0) }
+            .filter { $0.category.direction == direction }
                 
         await MainActor.run {
-            self.transactions = resultTransactions
-            self.transactionsSum = resultTransactions.reduce(0) { $0 + $1.amount }
+            self.transactions = resultTransactions ?? []
+            self.transactionsSum = resultTransactions?.reduce(0) { $0 + $1.amount } ?? 0
         }
     }
 }
