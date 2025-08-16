@@ -2,20 +2,19 @@ import SwiftUI
 
 @Observable
 final class AccountModel {
-    var service: BankAccountsService
+    var service: BankAccountsServiceProtocol
     var account: BankAccount?
     var isInEditingState: Bool = false
     var isBalanceHidden: Bool = false
     
     
-    init(service: BankAccountsService = BankAccountsService()) {
+    init(service: BankAccountsServiceProtocol = FallbackBankAccountsService()) {
         self.service = service
         Task { try await loadAccount() }
     }
     
     func loadAccount() async throws {
-        let bankAccountResponse = try await service.getAccount()
-        self.account = BankAccount(response: bankAccountResponse)
+        self.account = try await service.getAccount()
     }
     
     func getBalance() async -> Decimal {
@@ -52,6 +51,6 @@ final class AccountModel {
             self.account?.balance = newBalance
         }
         
-        try? await service.updateAccount(account: self.account!)
+        try? await service.updateAccount(self.account!)
     }
 }

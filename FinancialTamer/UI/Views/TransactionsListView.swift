@@ -3,6 +3,7 @@ import SwiftUI
 struct TransactionsListView: View {
     let direction: Direction
     let title: String
+    @State var editTransactionScreenOpened = false
     @State var transactionModel = TransactionsListViewModel()
     
     init(direction: Direction, title: String) {
@@ -50,7 +51,7 @@ struct TransactionsListView: View {
                     HStack {
                         Spacer()
                         Button {
-                            
+                            editTransactionScreenOpened = true
                         } label: {
                             Circle()
                                 .frame(width: 60)
@@ -70,6 +71,14 @@ struct TransactionsListView: View {
         .task {
             await transactionModel.loadTransactions(direction)
         }
+        .fullScreenCover(isPresented: $editTransactionScreenOpened) {
+            AddNewTransactionScreen(mode: .creating, direction: direction) {
+                Task {
+                    await transactionModel.loadTransactions(direction)
+                }
+            }
+        }
+        
     }
 }
 

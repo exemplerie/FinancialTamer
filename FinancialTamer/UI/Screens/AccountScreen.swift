@@ -85,7 +85,7 @@ struct AccountScreen: View {
                     .multilineTextAlignment(.trailing)
                     .focused($balanceFocused)
                     .onChange(of: balanceText) { newValue in
-                        balanceText = filterBalanceInput(newValue)
+                        balanceText = newValue.validatedMoneyInput()
                     }
                     .onChange(of: balanceFocused) {
                         if !balanceFocused {
@@ -108,17 +108,6 @@ struct AccountScreen: View {
         }.task {
             await loadAccountData()
         }
-    }
-    
-    private func filterBalanceInput(_ input: String) -> String {
-        let allowed = "0123456789.,"
-        var filtered = input.filter { allowed.contains($0) }
-        filtered = filtered.replacingOccurrences(of: ",", with: ".")
-        let parts = filtered.split(separator: ".", omittingEmptySubsequences: false)
-        if parts.count > 1 {
-            filtered = parts[0] + "." + parts[1...].joined()
-        }
-        return filtered
     }
     
     private var CurrencyView: some View {

@@ -40,11 +40,11 @@ final class TransactionsHistoryViewModel {
     }
     private(set) var totalAmount: Decimal = 0
     
-    private let service: TransactionsService
+    private let service: TransactionsServiceProtocol
     private let direction: Direction
     
     init(direction: Direction,
-         service: TransactionsService = TransactionsService()) {
+         service: TransactionsServiceProtocol = FallbackTransactionsService()) {
         
         self.direction = direction
         self.service = service
@@ -58,8 +58,7 @@ final class TransactionsHistoryViewModel {
     
     private func loadTransactions() async {
         let fetched = try? await service.getTransactions(from: startDate, to: endDate)
-        allTransactions = fetched?.compactMap { Transaction(response: $0) }
-            .filter { $0.category.direction == direction } ?? []
+        allTransactions = fetched?.filter { $0.category.direction == direction } ?? []
         visibleTransactions = allTransactions
         applySort()
         self.onTransactionsUpdated?()

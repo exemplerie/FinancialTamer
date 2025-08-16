@@ -1,7 +1,7 @@
 import Foundation
 
 
-final class TransactionsService {
+final class NetworkTransactionsService: TransactionsServiceProtocol {
     private let client: NetworkClient
     private let dateFormatter: ISO8601DateFormatter
     
@@ -11,9 +11,10 @@ final class TransactionsService {
         dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
     }
     
-    func getTransactions(from startDate: Date, to endDate: Date, accountId: Int = 0) async throws -> [TransactionResponse] {
+    
+    func getTransactions(from startDate: Date, to endDate: Date) async throws -> [Transaction] {
         do {
-            let accountId = try await BankAccountsService.shared.getAccount().id
+            let accountId = try await NetworkBankAccountsService.shared.getAccount().id
             let basePath = "transactions/account/\(accountId)/period"
             
             let df = DateFormatter()
@@ -35,11 +36,13 @@ final class TransactionsService {
             
             let endpoint = "\(basePath)?\(queryString)"
             
-            return try await client.request(
+            var fetchedTransactions = try await client.request(
                 endpoint: endpoint,
                 method: .get,
                 responseType: [TransactionResponse].self
             )
+            
+            return fetchedTransactions.compactMap { Transaction(response: $0) }
             
         } catch {
             throw ServiceErrors.otherError
