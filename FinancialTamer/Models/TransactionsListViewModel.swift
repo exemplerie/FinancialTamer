@@ -4,17 +4,15 @@ import SwiftUI
 final class TransactionsListViewModel: ObservableObject {
     var transactions: [Transaction] = []
     var transactionsSum: Decimal = 0.0
-    private let service = TransactionsService()
+    let service = FallbackTransactionsService()
     
     func loadTransactions(_ direction: Direction) async {
         let calendar  = Calendar.current
         
         let startDay = calendar.startOfDay(for: Date())
         let endDay = calendar.date(byAdding: .day, value: 1, to: startDay) ?? Date()
-        
-        let dayTransactions = try? await service.getTransactions(from: startDay, to: endDay)
-        
-        let resultTransactions = dayTransactions?.compactMap { Transaction(response: $0) }
+                
+        let resultTransactions = try? await service.getTransactions(from: startDay, to: endDay)
             .filter { $0.category.direction == direction }
                 
         await MainActor.run {

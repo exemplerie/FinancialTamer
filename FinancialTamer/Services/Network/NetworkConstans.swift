@@ -1,4 +1,4 @@
 struct NetworkConstans {
-    static let baseURLString = "https://shmr-finance.ru/api/v1/"
+    static let baseURLString = "baseURLString"
     static let token = "apiKey"
 }

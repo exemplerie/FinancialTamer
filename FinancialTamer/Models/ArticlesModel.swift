@@ -2,7 +2,7 @@ import SwiftUI
 
 @Observable
 final class ArticlesModel {
-    let service = CategoriesService()
+    let service = FallbackCategoriesService()
     
     var allCategories: [Category] = []
     
@@ -26,7 +26,7 @@ final class ArticlesModel {
     var searchedText = ""
     
     func loadCategories() async throws {
-        allCategories = try await service.getCategories().compactMap { Category(response: $0) }
+        allCategories = try await service.getCategories()
     }
     
     private func fuzzyMatchScore(_ a: String, _ b: String) -> Double {
