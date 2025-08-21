@@ -21,22 +21,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A35EAF93-3B9C-40CE-9518-49842527CAF1"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinancialTamer/UI/Views/TransactionsListView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "7"
-            endingLineNumber = "7"
-            landmarkName = "TransactionsListView"
-            landmarkType = "14">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "ADECFCFE-BCD5-4EA9-ABD3-A6C5C93B8D2C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -44,8 +28,8 @@
             filePath = "FinancialTamer/UI/Views/TransactionsListView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -474,10 +458,70 @@
             filePath = "FinancialTamer/Services/MockServices/MockTransactionsService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "create(_:)"
+            startingLineNumber = "146"
+            endingLineNumber = "146">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9E200C16-E319-4B61-A6D4-65198430890F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinancialTamer/UI/Screens/AddNewTransactionScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "init(transaction:direction:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "266D57FE-46EE-4438-8E4C-3981AE925EE6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinancialTamer/Services/MockServices/MockTransactionsService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "getTransactions(from:to:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "266D57FE-46EE-4438-8E4C-3981AE925EE6 - 924a3680789c1d50"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for FinancialTamer.MockTransactionsService.getTransactions(from: Foundation.Date, to: Foundation.Date) async -&gt; Swift.Array&lt;FinancialTamer.Transaction&gt;"
+                  moduleName = "FinancialTamer.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/exemplerie/Documents/study/ios/yandex_shmr/FinancialTamer/FinancialTamer/Services/MockServices/MockTransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "123"
+                  endingLineNumber = "123">
+               </Location>
+               <Location
+                  uuid = "266D57FE-46EE-4438-8E4C-3981AE925EE6 - 87a3583c10b355a1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (FinancialTamer.Transaction) -&gt; Swift.Bool in FinancialTamer.MockTransactionsService.getTransactions(from: Foundation.Date, to: Foundation.Date) async -&gt; Swift.Array&lt;FinancialTamer.Transaction&gt;"
+                  moduleName = "FinancialTamer.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/exemplerie/Documents/study/ios/yandex_shmr/FinancialTamer/FinancialTamer/Services/MockServices/MockTransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "123"
+                  endingLineNumber = "123">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

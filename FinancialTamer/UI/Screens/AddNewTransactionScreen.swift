@@ -19,13 +19,31 @@ class EditTransactionModel {
     var transactionsService = FallbackTransactionsService()
     var direction: Direction
     
-    init(mode: EditMode, direction: Direction, transactionId: Int = Int(Date().timeIntervalSince1970 * 1000)) {
-        self.mode = mode
-        self.transactionId = transactionId
+    init(direction: Direction) {
+        self.mode = .creating
+        self.transactionId = Int(Date().timeIntervalSince1970 * 1000)
         self.transactionDate = .now
         self.transactionTime = .now
         self.selectedCategory = nil
         self.direction = direction
+    }
+    
+    init(transaction: Transaction, direction: Direction) {
+        self.mode = .editing
+        self.direction = direction
+        self.transactionId = transaction.id
+        self.transactionDate = transaction.transactionDate
+        self.transactionTime = transaction.createdAt
+        self.selectedCategory = transaction.category
+        self.textSum = "\(transaction.amount)"
+        self.textComment = transaction.comment ?? ""
+    }
+    
+    func checkForm() -> Bool {
+        if self.selectedCategory != nil && !self.textSum.isEmpty {
+            return true
+        }
+        return false
     }
     
     func loadCategories() async throws {
@@ -33,6 +51,8 @@ class EditTransactionModel {
     }
     
     func saveTransaction() async throws {
+        guard checkForm() else { return }
+        
         Task {
             let bankAccount = try await FallbackBankAccountsService().getAccount()
             
@@ -40,7 +60,7 @@ class EditTransactionModel {
             
             switch mode {
                 case .editing:
-                try await transactionsService.edit(newTransaction)
+                try await transactionsService.create(newTransaction)
             case .creating:
                 try await transactionsService.create(newTransaction)
             }
@@ -52,10 +72,16 @@ class EditTransactionModel {
 struct AddNewTransactionScreen: View {
     @Environment(\.dismiss) var dismiss
     @State var model: EditTransactionModel
+    @State var fillAllFieldsAlert: Bool = false
     var onSave: (() -> Void)?
     
-    init(mode: EditMode = .creating, direction: Direction, onSave: (() -> Void)? = nil) {
-        self.model = EditTransactionModel(mode: mode, direction: direction)
+    init(mode: EditMode = .editing, direction: Direction, onSave: (() -> Void)? = nil) {
+        self.model = EditTransactionModel(direction: direction)
+        self.onSave = onSave
+    }
+    
+    init(transaction: Transaction, direction: Direction, onSave: (() -> Void)? = nil) {
+        self.model = EditTransactionModel(transaction: transaction, direction: direction)
         self.onSave = onSave
     }
     
@@ -117,7 +143,10 @@ struct AddNewTransactionScreen: View {
                 }
                 
             }
-            .navigationTitle("Мои Расходы")
+            .alert("Пожалуйста, заполните все обязательные поля.", isPresented: $fillAllFieldsAlert) {
+                        Button("Ок", role: .cancel) {}
+                    }
+            .navigationTitle(model.direction == .income ? "Мои Доходы" : "Мои Расходы")
             .safeAreaPadding(.top, 10)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -129,6 +158,10 @@ struct AddNewTransactionScreen: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Сохранить") {
+                        if !model.checkForm() {
+                            fillAllFieldsAlert = true
+                            return
+                        }
                         Task {
                             do {
                                 try await model.saveTransaction()

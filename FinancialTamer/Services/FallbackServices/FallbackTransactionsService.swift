@@ -1,13 +1,20 @@
 import Foundation
 
 final class FallbackTransactionsService: TransactionsServiceProtocol {
-    private let primary: TransactionsServiceProtocol
-    private let fallback: TransactionsServiceProtocol
+    private var primary: TransactionsServiceProtocol
+    private var fallback: TransactionsServiceProtocol
     private var isUsingFallback = true
     
     init(primary: TransactionsServiceProtocol = NetworkTransactionsService(), fallback: TransactionsServiceProtocol = MockTransactionsService()) {
         self.primary = primary
         self.fallback = fallback
+        Task {
+            self.fallback = await TransactionLocalDataSource(container: SwiftDataContextManager.shared.container, context: SwiftDataContextManager.shared.context)
+        }
+    }
+    
+    func changeDataSource() {
+        isUsingFallback.toggle()
     }
     
     func getTransactions(from startDate: Date, to endDate: Date) async throws -> [Transaction] {
