@@ -47,7 +47,7 @@ class EditTransactionModel {
     }
     
     func loadCategories() async throws {
-        categories = try await categoriesService.getCategories()
+        categories = try await categoriesService.getCategories(direction: direction)
     }
     
     func saveTransaction() async throws {
@@ -56,7 +56,7 @@ class EditTransactionModel {
         Task {
             let bankAccount = try await FallbackBankAccountsService().getAccount()
             
-            let newTransaction = Transaction(id: transactionId, account: bankAccount, category: selectedCategory!, amount: Decimal(Int(textSum) ?? 0), transactionDate: transactionDate, comment: textComment, createdAt: transactionTime, updatedAt: transactionTime)
+            let newTransaction = Transaction(id: transactionId, account: bankAccount, category: selectedCategory!, amount: Decimal(Int(textSum) ?? 0), transactionDate: transactionDate, comment: textComment.isEmpty ? nil : textComment, createdAt: transactionTime, updatedAt: transactionTime)
             
             switch mode {
                 case .editing:
@@ -136,6 +136,8 @@ struct AddNewTransactionScreen: View {
                     Section {
                         Button("Удалить расход") {
                             Task { try await model.transactionsService.remove(id: model.transactionId)
+                                onSave?()
+                                dismiss()
                             }
                         }
                         .tint(Color.red)

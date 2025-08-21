@@ -94,6 +94,11 @@ struct HistoryScreen: View {
                 .listStyle(.plain)
             }
         }
+        .onAppear {
+            Task {
+                await historyModel.loadTransactions()
+            }
+        }
     }
 }
 
