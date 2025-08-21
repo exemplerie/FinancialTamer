@@ -22,18 +22,25 @@ struct TransactionCellView : View {
             if isOutcome {
                 emojiBubble
             }
-                
-            VStack(alignment: .leading, spacing: 2) {
-                Text(transaction.category.name).font(.body)
-                if let comment = transaction.comment {
-                    Text(comment)
+            
+            if ((transaction.comment?.isEmpty) != nil) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(transaction.category.name).font(.body)
+                    Text(transaction.comment ?? "")
                         .font(.caption2)
                         .foregroundColor(.gray)
-                    }
-            }.frame(maxHeight: .infinity)
-                
+                }
+            } else {
+                VStack {
+                    Spacer()
+                    Text(transaction.category.name)
+                        .font(.body)
+                    Spacer()
+                }
+            }
+            
             Spacer()
-                
+            
             HStack(spacing: 5) {
                 Text(transaction.amount.description)
                 Text(transaction.account.currency)
@@ -41,11 +48,11 @@ struct TransactionCellView : View {
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
                     .foregroundColor(.gray)
-                }
             }
-            .padding(.vertical, 1)
-            .background(Color(.systemBackground))
         }
+        .padding(.vertical, 1)
+        .background(Color(.systemBackground))
+    }
 }
 
 #Preview {

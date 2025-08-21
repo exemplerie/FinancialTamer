@@ -15,7 +15,7 @@ final class TransactionsHistoryViewModel {
             if startDate > endDate {
                 endDate = startDate
             }
-            reloadTransactions()
+            Task { await loadTransactions() }
             onTransactionsUpdated?()
         }
     }
@@ -24,7 +24,7 @@ final class TransactionsHistoryViewModel {
             if endDate < startDate {
                 startDate = endDate
             }
-            reloadTransactions()
+            Task { await loadTransactions() }
             onTransactionsUpdated?()
         }
     }
@@ -52,20 +52,14 @@ final class TransactionsHistoryViewModel {
         self.startDate = defaultStart
         self.endDate = defaultEnd
         self.selectedSort = .byDate
-        
-        Task { await loadTransactions() }
     }
     
-    private func loadTransactions() async {
+    func loadTransactions() async {
         let fetched = try? await service.getTransactions(from: startDate, to: endDate)
         allTransactions = fetched?.filter { $0.category.direction == direction } ?? []
         visibleTransactions = allTransactions
         applySort()
         self.onTransactionsUpdated?()
-    }
-    
-    private func reloadTransactions() {
-        Task { await loadTransactions() }
     }
     
     func updateSort(_ option: SortOption) {

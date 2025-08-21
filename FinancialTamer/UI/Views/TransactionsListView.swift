@@ -3,8 +3,11 @@ import SwiftUI
 struct TransactionsListView: View {
     let direction: Direction
     let title: String
-    @State var editTransactionScreenOpened = false
+    @State var selectedTransaction: Transaction?
+    
+    @State var createTransactionScreenOpened = false
     @State var transactionModel = TransactionsListViewModel()
+    
     
     init(direction: Direction, title: String) {
         self.direction = direction
@@ -30,6 +33,9 @@ struct TransactionsListView: View {
                         } else {
                             ForEach(transactionModel.transactions, id: \.id) { transaction in
                                 TransactionCellView(transaction: transaction)
+                                    .onTapGesture {
+                                        selectedTransaction = transaction
+                                    }
                             }
                         }
                     }
@@ -51,7 +57,7 @@ struct TransactionsListView: View {
                     HStack {
                         Spacer()
                         Button {
-                            editTransactionScreenOpened = true
+                            createTransactionScreenOpened = true
                         } label: {
                             Circle()
                                 .frame(width: 60)
@@ -71,14 +77,20 @@ struct TransactionsListView: View {
         .task {
             await transactionModel.loadTransactions(direction)
         }
-        .fullScreenCover(isPresented: $editTransactionScreenOpened) {
+        .fullScreenCover(isPresented: $createTransactionScreenOpened) {
             AddNewTransactionScreen(mode: .creating, direction: direction) {
                 Task {
                     await transactionModel.loadTransactions(direction)
                 }
             }
         }
-        
+        .fullScreenCover(item: $selectedTransaction) { transaction in
+            AddNewTransactionScreen(transaction: transaction, direction: direction) {
+                Task {
+                    await transactionModel.loadTransactions(direction)
+                }
+            }
+        }
     }
 }
 

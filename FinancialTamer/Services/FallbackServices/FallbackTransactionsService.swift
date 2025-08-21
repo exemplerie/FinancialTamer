@@ -1,16 +1,32 @@
 import Foundation
 
 final class FallbackTransactionsService: TransactionsServiceProtocol {
-    private let primary: TransactionsServiceProtocol
-    private let fallback: TransactionsServiceProtocol
+    private var primary: TransactionsServiceProtocol
+    private var fallback: TransactionsServiceProtocol?
     private var isUsingFallback = true
     
-    init(primary: TransactionsServiceProtocol = NetworkTransactionsService(), fallback: TransactionsServiceProtocol = MockTransactionsService()) {
+    init(primary: TransactionsServiceProtocol, fallback: TransactionsServiceProtocol) {
         self.primary = primary
         self.fallback = fallback
     }
     
+    init() {
+        self.primary = NetworkTransactionsService()
+        self.fallback = nil
+        Task {
+            self.fallback = await TransactionLocalDataSource(container: SwiftDataContextManager.shared.container, context: SwiftDataContextManager.shared.context)
+        }
+    }
+    
+    func changeDataSource() {
+        isUsingFallback.toggle()
+    }
+    
     func getTransactions(from startDate: Date, to endDate: Date) async throws -> [Transaction] {
+        guard let fallback else {
+            throw NSError(domain: "Fallback not ready", code: -1)
+        }
+        
         if isUsingFallback {
             return try await fallback.getTransactions(from: startDate, to: endDate)
         }
@@ -25,6 +41,10 @@ final class FallbackTransactionsService: TransactionsServiceProtocol {
     }
     
     func create(_ transaction: Transaction) async throws {
+        guard let fallback else {
+            throw NSError(domain: "Fallback not ready", code: -1)
+        }
+        
         if isUsingFallback {
             try await fallback.create(transaction)
         } else {
@@ -38,6 +58,10 @@ final class FallbackTransactionsService: TransactionsServiceProtocol {
     }
     
     func edit(_ transaction: Transaction) async throws {
+        guard let fallback else {
+            throw NSError(domain: "Fallback not ready", code: -1)
+        }
+        
         if isUsingFallback {
             try await fallback.edit(transaction)
         } else {
@@ -51,6 +75,10 @@ final class FallbackTransactionsService: TransactionsServiceProtocol {
     }
     
     func remove(id: Int) async throws {
+        guard let fallback else {
+            throw NSError(domain: "Fallback not ready", code: -1)
+        }
+        
         if isUsingFallback {
             try await fallback.remove(id: id)
         } else {

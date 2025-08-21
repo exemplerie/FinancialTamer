@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct FinancialTamerApp: App {
@@ -6,5 +7,6 @@ struct FinancialTamerApp: App {
         WindowGroup {
             MainScreen()
         }
+        .modelContainer(for: [TransactionModel.self, CategoryModel.self, BankAccountModel.self])
     }
 }

@@ -1,8 +1,6 @@
 import Foundation
 
 final class MockTransactionsService: TransactionsServiceProtocol {
-    
-    
     private var transactions: [Transaction] = {
         let calendar = Calendar.current
         let now = Date()
@@ -120,8 +118,6 @@ final class MockTransactionsService: TransactionsServiceProtocol {
         
         return transactions
     }()
-    
-    
     
     func getTransactions(from startDate: Date, to endDate: Date) async -> [Transaction] {
         return transactions.filter({$0.transactionDate >= startDate && $0.transactionDate <= endDate})
